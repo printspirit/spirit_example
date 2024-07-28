@@ -1,0 +1,64 @@
+body, html {
+    height:100%;
+    width:100%;
+    overflow: hidden;
+}
+
+.container {
+    height: 100%;
+    overflow: auto;
+}
+
+.section {
+    text-align: center;
+    margin: 20px auto;
+    width: 75%;
+    font: 1.6em 'Open Sans';
+    font-family: "Microsoft Yahei", 微软雅黑, Arial;
+    line-height: 2em;
+    font-weight: 900;
+    font-style: normal;
+    display: block;
+}
+
+
+.section-detail {
+   text-align: center;
+   margin: 20px auto;
+   width: 75%;
+}
+
+.thumb {
+  border: 1px solid #ccc;
+  max-height: 100px;
+  max-width: 100px;
+} 
+
+.table {
+  width:50%; 
+  margin: 0 auto; 
+  border:1px solid #888
+}
+
+.table>thead>tr>th {
+  background-color:#ccc;
+}
+
+.table>tbody>tr {
+  height:120px;
+  border-bottom: 1px solid #ccc;
+}
+
+iframe {
+    border: none;
+    height:100%;
+    width:100%;
+}
+
+div.iframe {
+    position: absolute;
+    bottom: 0px;
+    top: 40px;
+    left: 0;
+    right: 0;
+}
