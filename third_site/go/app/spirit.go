@@ -9,23 +9,27 @@ import (
 
 const (
 	SPIRIT_HOST = "https://www.printspirit.cn"
-	UID         = "third_test"
-	PASS        = "third_test"
 )
 
-type AccessToken struct {
-	Id           string
-	expired_time int64
+type ThirdApp struct {
+	Uid, Pass    string 
+	Token        string
+	Expired_time int64
 }
 
-var access_token = AccessToken{}
-
-func GetAccessToken(uid, pass string) (string, error) {
-
-	if access_token.expired_time > time.Now().Unix() {
-		return access_token.Id, nil
+func NewThirdApp(uid, pass string) *ThirdApp {
+	return &ThirdApp{
+		Uid : uid, 
+		Pass : pass,
 	}
-	url := fmt.Sprintf("%s/api/get-access-token?userid=%v&passwd=%s", SPIRIT_HOST, uid, pass)
+}
+
+func (app *ThirdApp) getAccessToken() (string, error) {
+
+	if app.Expired_time > time.Now().Unix() {
+		return app.Token, nil
+	}
+	url := fmt.Sprintf("%s/api/get-access-token?userid=%v&passwd=%s", SPIRIT_HOST, app.Uid, app.Pass)
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -41,9 +45,9 @@ func GetAccessToken(uid, pass string) (string, error) {
 	if rc["rc"].(string) != "OK" {
 		return "", fmt.Errorf(rc["errmsg"].(string))
 	}
-	access_token.expired_time = time.Now().Unix() + int64(rc["expirt"].(float64))
-	access_token.Id = rc["token"].(string)
-	return access_token.Id, nil
+	app.Expired_time = time.Now().Unix() + int64(rc["expirt"].(float64))
+	app.Token = rc["token"].(string)
+	return app.Token, nil
 }
 
 type TpInfo struct {
@@ -52,8 +56,8 @@ type TpInfo struct {
 	Id       string `json:"id"`
 }
 
-func GetList(subclass string) (*[]TpInfo, error) {
-	token, err := GetAccessToken(UID, PASS)
+func (app *ThirdApp) GetList(subclass string) (*[]TpInfo, error) {
+	token, err := app.getAccessToken()
 	if err != nil {
 		return nil, err
 	}
@@ -79,8 +83,8 @@ func GetList(subclass string) (*[]TpInfo, error) {
 	return &rc.Data, nil
 }
 
-func GetEditUrl(subclass, tpid string) (string, error) {
-	token, err := GetAccessToken(UID, PASS)
+func (app *ThirdApp) GetEditUrl(subclass, tpid string) (string, error) {
+	token, err := app.getAccessToken()
 	if err != nil {
 		return "", err
 	}

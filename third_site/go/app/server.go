@@ -2,20 +2,27 @@ package app
 
 import (
 	_ "fmt"
-	"github.com/kardianos/osext"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"html/template"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"path/filepath"
+	"embed"
 )
 
-func file_svr(root, minitype, file string) func(c echo.Context) error {
+//go:embed statics/*
+var statics embed.FS
+
+var (
+	UID         = "third_test"   //请修改为你在打印精灵上的账号和密码
+	PASS        = "third_test"
+	spirit      = NewThirdApp(UID, PASS)
+)
+
+func file_svr(file, minitype string) func(c echo.Context) error {
 	return func(c echo.Context) error {
-		filePath := filepath.Join(root, file)
-		content, err := ioutil.ReadFile(filePath)
+		content, err :=  statics.ReadFile(filepath.Join("statics", file))
 		if err != nil {
 			return err // 处理读取文件错误
 		}
@@ -35,14 +42,14 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 }
 
 func list(c echo.Context) error {
-	lst, _ := GetList("user1")
+	lst, _ := spirit.GetList("user1")
 	return c.Render(http.StatusOK, "list.html", lst)
 }
 
 func edit(c echo.Context) error {
 	subclass := c.QueryParam("subclass")
 	tpid := c.QueryParam("tpid")
-	url, err := GetEditUrl(subclass, tpid)
+	url, err := spirit.GetEditUrl(subclass, tpid)
 	if err != nil {
 		return c.Render(http.StatusOK, "err.html", err.Error())
 	}
@@ -55,19 +62,17 @@ func edit(c echo.Context) error {
 
 func Start() {
 
-	root, _ := osext.ExecutableFolder()
-
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
 	// Define a renderer for templates
 	renderer := &TemplateRenderer{
-		templates: template.Must(template.ParseGlob("*.html")),
+		templates: template.Must(template.ParseFS(statics, "statics/*.html")),
 	}
 	e.Renderer = renderer
 
-	e.GET("/style.css", file_svr(root, "text/css", "style.css"))
+	e.GET("/style.css", file_svr("style.css", "text/css"))
 	e.GET("/", list)
 	e.GET("/list", list)
 	e.GET("/edit", edit)
