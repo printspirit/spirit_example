@@ -1,9 +1,9 @@
 package main
 
 import (
-    "spirit_test/app"
+	"spirit_test/app"
 )
 
 func main() {
-    app.Start();
+	app.Start()
 }
