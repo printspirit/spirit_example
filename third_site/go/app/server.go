@@ -7,7 +7,6 @@ import (
 	"html/template"
 	"io"
 	"net/http"
-	"path/filepath"
 	"embed"
 	"fmt"
 )
@@ -23,7 +22,7 @@ var (
 
 func file_svr(file, minitype string) func(c echo.Context) error {
 	return func(c echo.Context) error {
-		content, err :=  statics.ReadFile(filepath.Join("statics", file))
+		content, err :=  statics.ReadFile("statics/" + file)
 		if err != nil {
 			return err // 处理读取文件错误
 		}
