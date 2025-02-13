@@ -1,4 +1,4 @@
-module spirit_test
+module third_site
 
 go 1.21
 

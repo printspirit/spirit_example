@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"embed"
+	"fmt"
 )
 
 //go:embed statics/*
@@ -60,7 +61,7 @@ func edit(c echo.Context) error {
 	}
 }
 
-func Start() {
+func Start(port int) {
 
 	e := echo.New()
 	e.Use(middleware.Logger())
@@ -77,5 +78,8 @@ func Start() {
 	e.GET("/list", list)
 	e.GET("/edit", edit)
 
-	e.Logger.Fatal(e.Start(":8000"))
+	err := e.Start(fmt.Sprintf(":%d",port))
+	if err!=nil {
+		fmt.Printf("服务器启动失败\n请检查端口 %d 是否被占用， 并使用 -p 参数指定新端口\n", port)
+	}
 }

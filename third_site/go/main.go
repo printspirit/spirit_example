@@ -1,9 +1,12 @@
 package main
 
 import (
-	"spirit_test/app"
+	"third_site/app"
+	"flag"
 )
 
 func main() {
-	app.Start()
+	port := flag.Int("p", 8000, "WEB端口")
+	flag.Parse()
+	app.Start(*port)
 }
