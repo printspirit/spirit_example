@@ -21,11 +21,11 @@
       	<tr><th>标签名</th><th>子分类</th><th>缩略图</th><th/></tr>
       	</thead>
       	<tbody>
-      	 {{range .}}
+      	 {{range .list}}
             <tr>
                 <td>{{.Name}}</td>
                 <td>{{.Subclass}}</td>
-                <td><img class="thumb" src='https://www.printspirit.cn/utils/thumb?id={{.Id}}'/></td>
+                <td><img class="thumb" src='{{$.host}}/utils/thumb?id={{.Id}}'/></td>
                 <td>
                     <a href='edit?subclass={{.Subclass}}&tpid={{.Id}}'><button>编辑(嵌入)</button></a>
                     <a href='edit?subclass={{.Subclass}}&tpid={{.Id}}&target=new'><button>编辑(跳转)</button></a>

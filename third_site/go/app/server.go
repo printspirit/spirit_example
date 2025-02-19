@@ -18,6 +18,8 @@ var (
 	UID         = "third_test"   //请修改为你在打印精灵上的账号和密码
 	PASS        = "third_test"
 	spirit      = NewThirdApp(SPIRIT_HOST, UID, PASS)
+	// 对于SpiritCenter 用下面航替换
+	//spirit    = NewThirdApp("http://SpiritSenterIP:9011", UID, PASS)
 )
 
 func file_svr(file, minitype string) func(c echo.Context) error {
@@ -43,7 +45,7 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 
 func list(c echo.Context) error {
 	lst, _ := spirit.GetList("user1")
-	return c.Render(http.StatusOK, "list.html", lst)
+	return c.Render(http.StatusOK, "list.html", map[string]any{"host":spirit.Host, "list":lst})
 }
 
 func edit(c echo.Context) error {
