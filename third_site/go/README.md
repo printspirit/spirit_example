@@ -3,5 +3,5 @@
 ```
 cd 源代码目录
 go build
-./spirit_test
+./third_site
 ```
