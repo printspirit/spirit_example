@@ -7,20 +7,21 @@ import (
 	"time"
 )
 
-const (
+var (
 	SPIRIT_HOST = "https://www.printspirit.cn"
 )
 
 type ThirdApp struct {
-	Uid, Pass    string 
+	Host, Uid, Pass    string 
 	Token        string
 	Expired_time int64
 }
 
-func NewThirdApp(uid, pass string) *ThirdApp {
+func NewThirdApp(host, uid, pass string) *ThirdApp {
 	return &ThirdApp{
+		Host: host,
 		Uid : uid, 
-		Pass : pass,
+		Pass: pass,
 	}
 }
 
@@ -29,7 +30,7 @@ func (app *ThirdApp) getAccessToken() (string, error) {
 	if app.Expired_time > time.Now().Unix() {
 		return app.Token, nil
 	}
-	url := fmt.Sprintf("%s/api/get-access-token?userid=%v&passwd=%s", SPIRIT_HOST, app.Uid, app.Pass)
+	url := fmt.Sprintf("%s/api/get-access-token?userid=%v&passwd=%s", app.Host, app.Uid, app.Pass)
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -61,7 +62,7 @@ func (app *ThirdApp) GetList(subclass string) (*[]TpInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	url := fmt.Sprintf("%s/api/get-label-list?token=%s&subclass=%s", SPIRIT_HOST, token, subclass)
+	url := fmt.Sprintf("%s/api/get-label-list?token=%s&subclass=%s", app.Host, token, subclass)
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -88,5 +89,5 @@ func (app *ThirdApp) GetEditUrl(subclass, tpid string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return fmt.Sprintf("%s/third-edit?subclass=%s&tpid=%s&token=%s", SPIRIT_HOST, subclass, tpid, token), nil
+	return fmt.Sprintf("%s/third-edit?subclass=%s&tpid=%s&token=%s", app.Host, subclass, tpid, token), nil
 }

@@ -17,7 +17,7 @@ var statics embed.FS
 var (
 	UID         = "third_test"   //请修改为你在打印精灵上的账号和密码
 	PASS        = "third_test"
-	spirit      = NewThirdApp(UID, PASS)
+	spirit      = NewThirdApp(SPIRIT_HOST, UID, PASS)
 )
 
 func file_svr(file, minitype string) func(c echo.Context) error {
