@@ -2,10 +2,7 @@ module third_site
 
 go 1.21
 
-require (
-	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
-	github.com/labstack/echo/v4 v4.12.0
-)
+require github.com/labstack/echo/v4 v4.12.0
 
 require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
