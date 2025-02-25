@@ -35,6 +35,7 @@ require_once("spirit.php");
 	      		    <td>
 	      		        <a href='<?="edit?subclass=${l['subclass']}&tpid=${l['id']}"?>'><button>编辑(嵌入)</button></a>
 	      		        <a href='<?="edit?subclass=${l['subclass']}&tpid=${l['id']}&target=new"?>'><button>编辑(跳转)</button></a>
+						<a href='<?="del?tpid=${l['id']}"?>'><button>删除</button></a>
 	      		    </td>
 	      		</tr>
 	    <?php
@@ -51,6 +52,8 @@ require_once("spirit.php");
       	<div class="section-detail">
       		<a href='edit?subclass=user1'><button>新增标签(嵌入)</button></a>
       		<a href='edit?subclass=user1&target=new'><button>新增标签(跳转)</button></a>
+			<a href='new?subclass=user1'><button>先创建后修改(嵌入)</button></a>
+      		<a href='new?subclass=user1&target=new'><button>先创建后修改(跳转)</button></a>
       	</div>
   	 </div>
   </body>

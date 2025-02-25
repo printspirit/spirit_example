@@ -29,6 +29,7 @@
                 <td>
                     <a href='edit?subclass={{.Subclass}}&tpid={{.Id}}'><button>编辑(嵌入)</button></a>
                     <a href='edit?subclass={{.Subclass}}&tpid={{.Id}}&target=new'><button>编辑(跳转)</button></a>
+                    <a href='del?tpid={{.Id}}'><button>删除</button></a>
                 </td>
             </tr>
         {{end}}
@@ -43,6 +44,8 @@
       	<div class="section-detail">
       		<a href='edit?subclass=user1'><button>新增标签(嵌入)</button></a>
       		<a href='edit?subclass=user1&target=new'><button>新增标签(跳转)</button></a>
+      		<a href='new?subclass=user1'><button>先创建后修改(嵌入)</button></a>
+      		<a href='new?subclass=user1&target=new'><button>先创建后修改(跳转)</button></a>
       	</div>
   	 </div>
   </body>

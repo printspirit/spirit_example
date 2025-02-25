@@ -26,6 +26,27 @@ function getAccessToken($uid, $pass) {
 	die("无法获取TOKEN:".$rc->errmsg);
 }
 
+function newLabel($name, $width=0, $height=0, $dpi=0, $subclass="", $refid=""){
+	$token = getAccessToken(UID, PASS);
+	echo $token;
+	$url = "/api/new-label?token=${token}&name=" . urlencode($name) . "&refid={$refid}&width={$width}&height={$height}&dpi={$dpi}&subclass=${urlencode("subclass")}";
+	$rc=json_decode(
+		file_get_contents(SPIRIT_HOST . $url), true
+	);
+	echo $url;
+	if ($rc!=NULL && $rc['rc']=='OK') return $rc['id'];
+	return "";
+}
+
+function delLabel($id){
+	$token = getAccessToken(UID, PASS);
+	$rc=json_decode(
+		file_get_contents(SPIRIT_HOST . 
+			"/api/del-label?token=${token}&id={$id}"
+		), true);
+	return $rc;
+}
+
 function getList($subclass="") {
 	$token = getAccessToken(UID, PASS);
 	$rc=json_decode(file_get_contents(SPIRIT_HOST . "/api/get-label-list?token=${token}&subclass=${subclass}"), true);

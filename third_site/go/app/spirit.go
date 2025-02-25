@@ -57,6 +57,62 @@ type TpInfo struct {
 	Id       string `json:"id"`
 }
 
+func (app *ThirdApp) NewLabel(name string, width, height, dpi int, subclass, refid string) (string, error) {
+	token, err := app.getAccessToken()
+	if err != nil {
+		return "", err
+	}
+	url := fmt.Sprintf("%s/api/new-label?token=%s&refid=%s&name=%s&width=%d&height=%d&dpi=%d&subclass=%s", app.Host, token, 
+	    refid, name, width, height, dpi, subclass)
+	fmt.Println(url)    
+	    
+
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+	rc := struct {
+		Rc     string   `json:"rc"`
+		Errmsg string   `json:"errmsg"`
+		Id     string   `json:"id"`
+	}{}
+	err = json.NewDecoder(resp.Body).Decode(&rc)
+	if err != nil {
+		return "", err
+	}
+	if rc.Rc != "OK" {
+		return "", fmt.Errorf(rc.Errmsg)
+	}
+	return rc.Id, nil
+}
+
+func (app *ThirdApp) DelLabel(id string) (error) {
+	token, err := app.getAccessToken()
+	if err != nil {
+		return err
+	}
+	url := fmt.Sprintf("%s/api/del-label?token=%s&id=%s", app.Host, token, id)
+	
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	rc := struct {
+		Rc     string   `json:"rc"`
+		Errmsg string   `json:"errmsg"`
+	}{}
+	err = json.NewDecoder(resp.Body).Decode(&rc)
+	if err != nil {
+		return err
+	}
+	if rc.Rc != "OK" {
+		return fmt.Errorf(rc.Errmsg)
+	}
+	return nil
+}
+
 func (app *ThirdApp) GetList(subclass string) (*[]TpInfo, error) {
 	token, err := app.getAccessToken()
 	if err != nil {

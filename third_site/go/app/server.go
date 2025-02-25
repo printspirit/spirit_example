@@ -19,7 +19,7 @@ var (
 	PASS        = "third_test"
 	spirit      = NewThirdApp(SPIRIT_HOST, UID, PASS)
 	// 对于SpiritCenter 用下面航替换
-	//spirit    = NewThirdApp("http://SpiritSenterIP:9011", UID, PASS)
+	//spirit    = NewThirdApp("http://192.168.1.100:9011", UID, PASS)
 )
 
 func file_svr(file, minitype string) func(c echo.Context) error {
@@ -62,6 +62,33 @@ func edit(c echo.Context) error {
 	}
 }
 
+func new(c echo.Context) error {
+    subclass := c.QueryParam("subclass")
+    tpid, err:= spirit.NewLabel("测试标签", 500, 800, 203, subclass, "")
+    if err != nil {
+		return c.Render(http.StatusOK, "err.html", err.Error())
+	}
+	url, err := spirit.GetEditUrl(subclass, tpid)
+	if err != nil {
+		return c.Render(http.StatusOK, "err.html", err.Error())
+	}
+	if c.QueryParam("target") == "new" {
+		return c.Redirect(http.StatusFound, url)
+	} else {
+		return c.Render(http.StatusOK, "edit.html", url)
+	}
+}
+
+func del(c echo.Context) error {
+    tpid := c.QueryParam("tpid")
+    err:= spirit.DelLabel(tpid)
+    if err != nil {
+		return c.Render(http.StatusOK, "err.html", err.Error())
+	}
+	lst, _ := spirit.GetList("user1")
+	return c.Render(http.StatusOK, "list.html", map[string]any{"host":spirit.Host, "list":lst})
+}
+
 func Start(port int) {
 
 	e := echo.New()
@@ -78,6 +105,8 @@ func Start(port int) {
 	e.GET("/", list)
 	e.GET("/list", list)
 	e.GET("/edit", edit)
+	e.GET("/new", new)
+	e.GET("/del", del)
 
 	err := e.Start(fmt.Sprintf(":%d",port))
 	if err!=nil {
