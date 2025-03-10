@@ -1,7 +1,6 @@
 package app
 
 import (
-	_ "fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"html/template"
@@ -17,9 +16,10 @@ var statics embed.FS
 var (
 	UID         = "third_test"   //请修改为你在打印精灵上的账号和密码
 	PASS        = "third_test"
-	spirit      = NewThirdApp(SPIRIT_HOST, UID, PASS)
+	//spirit      = NewThirdApp(SPIRIT_HOST, UID, PASS)
 	// 对于SpiritCenter 用下面航替换
-	//spirit    = NewThirdApp("http://192.168.1.100:9011", UID, PASS)
+	spirit    = NewThirdApp("http://192.168.1.100:9011", UID, PASS)
+	//spirit    = NewThirdApp("http://192.168.1.100:8059", UID, PASS)
 )
 
 func file_svr(file, minitype string) func(c echo.Context) error {
@@ -44,7 +44,10 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 }
 
 func list(c echo.Context) error {
-	lst, _ := spirit.GetList("user1")
+	lst, err := spirit.GetList("user1")
+	if err!=nil {
+	    return c.Render(http.StatusOK, "err.html", err.Error())
+	}
 	return c.Render(http.StatusOK, "list.html", map[string]any{"host":spirit.Host, "list":lst})
 }
 
@@ -68,14 +71,14 @@ func new(c echo.Context) error {
     if err != nil {
 		return c.Render(http.StatusOK, "err.html", err.Error())
 	}
-	url, err := spirit.GetEditUrl(subclass, tpid)
-	if err != nil {
-		return c.Render(http.StatusOK, "err.html", err.Error())
-	}
 	if c.QueryParam("target") == "new" {
+	    url, err := spirit.GetEditUrl(subclass, tpid)
+    	if err != nil {
+	    	return c.Render(http.StatusOK, "err.html", err.Error())
+	    }
 		return c.Redirect(http.StatusFound, url)
 	} else {
-		return c.Render(http.StatusOK, "edit.html", url)
+		return c.Redirect(http.StatusTemporaryRedirect, "edit?tpid="+tpid)
 	}
 }
 
